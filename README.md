@@ -430,3 +430,6 @@ EDUAGENT aims to make academic preparation more organised, accessible and person
 ---
 
 *Built to make learning more organised, efficient and accessible.*
+
+
+Author : Karna Rishik
