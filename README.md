@@ -1,1 +1,432 @@
-# EDUAGENT ΓÇö Autonomous Multi-Agent AI Ecosystem for Education and Personalised Learning  EDUAGENT is a production-grade, syllabus-grounded academic ecosystem powered by autonomous multi-agent orchestration. It is engineered specifically for university and higher education settings to eliminate generic AI hallucinations and enforce curriculum-aligned tutoring, textbook discovery, video curation, dynamic semester planning, and adaptive diagnostic assessment.  ---  ## 1. Multi-Agent Architecture  EDUAGENT implements an explicit multi-agent coordination pipeline consisting of 5 specialized agents and 1 central orchestrator:  1. **Academic Coordinator Agent (Agent 6 ΓÇö Central Orchestrator)**:    - Evaluates student input, verifies academic relevance, checks active syllabus bounds, selects the appropriate specialist agent, and synthesizes the final response.    - Outputs a transparent step-by-step execution trace:      `Analysing Student Request` ΓåÆ `Checking Academic Syllabus` ΓåÆ `Selecting Specialised Agent` ΓåÆ `Executing Agentic Task` ΓåÆ `Validating Results` ΓåÆ `Delivering Final Response`.  2. **Academic Tutor Agent (Agent 1)**:    - Provides concept explanations, algorithm breakdowns, step-by-step math derivations, and memory diagrams.    - Enforces the strict educational restriction boundary: strictly refuses non-academic inquiries with the exact required mandate:      *"I am EDUAGENT, an academic learning assistant. I can only assist with educational subjects, syllabus-related questions and learning activities. Please start a new academic conversation with a relevant educational question."*  3. **Academic Research Agent (Agent 2)**:    - Autonomous academic literature and textbook researcher.    - Distinguishes between legal, open-access PDFs (e.g. Open Data Structures, INRIA, OpenStax) and commercial publisher references (e.g. MIT Press, McGraw Hill). Strictly adheres to copyright law.  4. **Video Discovery Agent (Agent 3)**:    - Curates syllabus-aligned video lectures and playlists from world-class universities and platforms (MIT OpenCourseWare, Stanford, NPTEL, Abdul Bari, freeCodeCamp).    - Supplies verified thumbnail previews, channel attribution, duration, and direct links.  5. **Semester Study Planner Agent (Agent 4)**:    - Takes courses, units, exam dates, daily available hours, and student strengths/weaknesses.    - Assigns difficulty weights, partitions the timeline (Study Days, Weekly Consolidation, Adaptive Buffer Days, Mock Tests), and dynamically reschedules missed sessions.  6. **Academic Assessment Agent (Agent 5)**:    - Generates syllabus-anchored multiple choice quizzes.    - Performs automatic grading, computes percentage scores, identifies weak syllabus topics, and recommends targeted remediation.  ---  ## 2. Intelligent 3-Key Gemini Flash API Manager  EDUAGENT incorporates a resilient API key rotation manager designed for enterprise-grade uptime: - Loads up to 3 keys: `GEMINI_API_KEY_1`, `GEMINI_API_KEY_2`, `GEMINI_API_KEY_3` (with fallback to `GEMINI_API_KEY`). - Performs round-robin rotation across active keys. - On HTTP 429 (Rate Limit) or Quota exhaustion, immediately fails over to the next healthy key with exponential backoff. - Maintains a cooldown health monitor. - Logs errors without leaking sensitive credentials. - Masks key strings in UI displays (`Key-1 (..4a2f)`).  ---  ## 3. Project Directory Structure  ```text EDUAGENT/ Γö£ΓöÇΓöÇ app.py                      # Main Streamlit Application Γö£ΓöÇΓöÇ config/ Γöé   ΓööΓöÇΓöÇ settings.py             # Global settings, paths, models, and secrets Γö£ΓöÇΓöÇ core/ Γöé   Γö£ΓöÇΓöÇ agent_base.py           # BaseAgent class with execution step recording Γöé   Γö£ΓöÇΓöÇ api_manager.py          # Intelligent 3-Key Gemini rotation & failover Γöé   Γö£ΓöÇΓöÇ coordinator.py          # Central Academic Coordinator Agent Γöé   Γö£ΓöÇΓöÇ domain_guard.py         # Multi-layer educational security filter Γöé   ΓööΓöÇΓöÇ security.py             # PBKDF2 password hashing & authentication Γö£ΓöÇΓöÇ agents/ Γöé   Γö£ΓöÇΓöÇ academic_tutor.py       # Agent 1: Syllabus-grounded tutoring Γöé   Γö£ΓöÇΓöÇ research_agent.py       # Agent 2: Legal textbook discovery Γöé   Γö£ΓöÇΓöÇ video_agent.py          # Agent 3: University video curation Γöé   Γö£ΓöÇΓöÇ study_planner.py        # Agent 4: Autonomous semester scheduling Γöé   ΓööΓöÇΓöÇ assessment_agent.py     # Agent 5: Diagnostic quiz & gap analysis Γö£ΓöÇΓöÇ services/ Γöé   Γö£ΓöÇΓöÇ document_service.py     # PDF upload, PyMuPDF extraction & chunking Γöé   Γö£ΓöÇΓöÇ retrieval_service.py    # Local keyword/TF-IDF chunk retrieval Γöé   Γö£ΓöÇΓöÇ study_service.py        # Topic progress & assessment persistence Γöé   Γö£ΓöÇΓöÇ syllabus_service.py     # Course, unit, and topic CRUD Γöé   Γö£ΓöÇΓöÇ web_research.py         # Open educational resource lookup Γöé   ΓööΓöÇΓöÇ youtube_service.py      # Video lecture discovery Γö£ΓöÇΓöÇ database/ Γöé   Γö£ΓöÇΓöÇ db.py                   # SQLite connection & database seeding Γöé   Γö£ΓöÇΓöÇ models.py               # Data definitions Γöé   ΓööΓöÇΓöÇ schema.sql              # 15-table SQLite relational schema Γö£ΓöÇΓöÇ ui/ Γöé   Γö£ΓöÇΓöÇ admin_dashboard.py Γöé   Γö£ΓöÇΓöÇ authentication.py Γöé   Γö£ΓöÇΓöÇ components.py           # Headers and Agent Trace visualizer Γöé   Γö£ΓöÇΓöÇ student_dashboard.py Γöé   Γö£ΓöÇΓöÇ tutor_interface.py Γöé   Γö£ΓöÇΓöÇ resource_library.py Γöé   Γö£ΓöÇΓöÇ video_library.py Γöé   Γö£ΓöÇΓöÇ planner_interface.py Γöé   ΓööΓöÇΓöÇ assessment_interface.py Γö£ΓöÇΓöÇ utils/ Γöé   Γö£ΓöÇΓöÇ helpers.py Γöé   Γö£ΓöÇΓöÇ pdf_processor.py Γöé   ΓööΓöÇΓöÇ validators.py Γö£ΓöÇΓöÇ storage/ Γöé   Γö£ΓöÇΓöÇ documents/ Γöé   ΓööΓöÇΓöÇ uploads/ Γö£ΓöÇΓöÇ .env.example Γö£ΓöÇΓöÇ requirements.txt ΓööΓöÇΓöÇ README.md ```  ---  ## 4. Installation & Windows Setup Instructions  ### Prerequisites - Python 3.11 or higher - Git  ### Step 1: Clone the repository ```bash git clone <repository-url> cd EDUAGENT ```  ### Step 2: Create and Activate Virtual Environment (Windows) ```cmd python -m venv venv venv\Scripts\activate ``` *(On macOS/Linux: `source venv/bin/activate`)*  ### Step 3: Install Required Dependencies ```bash pip install -r requirements.txt ```  ### Step 4: Configure Environment Variables Copy `.env.example` to `.env`: ```cmd copy .env.example .env ``` Edit `.env` to configure your Gemini API keys: ```env GEMINI_API_KEY_1="your-first-gemini-flash-key" GEMINI_API_KEY_2="your-second-gemini-flash-key" GEMINI_API_KEY_3="your-third-gemini-flash-key" ADMIN_PASSWORD="118b" ```  ### Step 5: Initialize the Database ```bash python database/db.py ```  ### Step 6: Launch EDUAGENT ```bash streamlit run app.py ``` The application will launch in your browser at `http://localhost:8501`.  ---  ## 5. Demonstration Workflow & Credentials  ### Administrator Access 1. Select **Administrator Portal** on the login screen. 2. Enter demonstration password: `118b`. 3. Configure curriculum: Add new courses, units, syllabus topics, and reference books. 4. Upload lecture notes or past papers (PDF) to build the local retrieval index. 5. Review the **API Key Monitor** to inspect pool status and failovers.  ### Student Access 1. Select **Student Access** and log in with default credentials:    - **Email:** `student@eduagent.ac`    - **Password:** `student123`    *(Or click 'Register' to create a new account).* 2. **AI Academic Tutor**: Ask a question (e.g., *"Explain linked lists vs arrays"*). Watch the live Multi-Agent Orchestration Trace execute. 3. **Domain Guard Test**: Ask an unrelated question (e.g., *"Who won the World Cup?"*). Notice the strict refusal preserving academic integrity. 4. **Book Library**: View verified open-access textbooks vs commercial reference books. 5. **Video Learning**: Watch syllabus-aligned lectures from MIT and Stanford. 6. **Semester Planner**: Customize study hours and target exam dates to generate a day-by-day roadmap with revision and buffer days. 7. **Assessments**: Take a unit quiz, view instant scoring, and identify knowledge gaps.  ---  ## 6. Verification and Testing Results  - **TEST 1 (Admin Login)**: Verified login with password `118b`. - **TEST 2 (Course Creation)**: Verified CRUD operations on CS201 and CS202. - **TEST 3 (Syllabus Structure)**: Verified 5 units and detailed topics per unit. - **TEST 4 (Student Auth)**: Verified PBKDF2 password verification and isolated storage. - **TEST 5 (Academic Tutor)**: Verified syllabus grounding and step-by-step pedagogical outputs. - **TEST 6 (Domain Guard)**: Verified rejection of entertainment queries and prompt leak attempts. - **TEST 7 (Research Agent)**: Verified open-access PDF flagging vs official publisher citations. - **TEST 8 (Video Agent)**: Verified MIT OCW, NPTEL, and Abdul Bari lecture mappings. - **TEST 9 (Semester Planner)**: Verified difficulty weights, buffer day distribution, and rescheduling. - **TEST 10 (Assessment Agent)**: Verified diagnostic scoring and remediation prescriptions. - **TEST 11 (API Key Manager)**: Verified round-robin rotation and failover on rate limits.  ---  ## 7. Known Limitations - YouTube Data API v3 requires an active Google Cloud key for dynamic live search; a rich curated university lecture fallback is active by default. - PyMuPDF text extraction is optimized for text-based PDFs; scanned image-only PDFs require OCR preprocessing.
+# 🎓 EDUAGENT – Autonomous Multi-Agent AI Education Platform
+
+### Less Time Managing Education. More Time Learning.
+
+EDUAGENT is an AI-powered educational assistance platform designed to reduce the time and effort students spend managing different academic activities.
+
+Students often switch between multiple platforms to understand difficult concepts, find academic resources, discover educational videos, prepare study schedules and evaluate their knowledge.
+
+Although these activities are individually simple, managing them across different platforms consumes valuable study time.
+
+**EDUAGENT aims to bridge this gap by bringing multiple academic activities into one coordinated platform powered by specialised AI agents.**
+
+---
+
+## 🚀 Problem Statement
+
+Students face several challenges during their academic preparation:
+
+- Finding reliable academic resources takes time.
+- Understanding difficult concepts requires additional learning support.
+- Searching for relevant educational videos across multiple platforms can be inefficient.
+- Preparing personalised study schedules requires planning and organisation.
+- Students often lack a convenient way to evaluate their understanding and identify weak topics.
+
+The central problem is not the lack of educational resources. It is the time and effort required to discover, organise and use them effectively.
+
+### Our Solution
+
+EDUAGENT provides a unified educational environment where students can access different academic services through a coordinated multi-agent architecture.
+
+Instead of handling every request through a single general-purpose workflow, the platform is designed around specialised agents, each responsible for a particular educational task.
+
+---
+
+## ✨ Key Features
+
+| Feature | Description |
+|---|---|
+| AI Academic Tutor | Explains academic concepts with structured, student-friendly responses. |
+| Academic Research | Helps discover academic books and reference materials. |
+| Video Discovery | Finds relevant educational lectures and learning videos. |
+| Study Planner | Generates structured study schedules and preparation roadmaps. |
+| Assessment System | Generates quizzes and evaluates student understanding. |
+| Student Performance Analysis | Analyses academic performance to identify strengths and weaknesses. |
+| Domain Guard | Restricts assistance to academic and educational topics. |
+| Agent Execution Trace | Displays the stages involved in processing requests. |
+| Gemini API Management | Supports API key rotation and failover handling. |
+
+---
+
+## 🧠 Multi-Agent Architecture
+
+EDUAGENT follows a specialised multi-agent design.
+
+Each agent is responsible for a specific academic activity.
+
+### 1. Academic Tutor Agent
+
+- Explains complex academic concepts.
+- Provides structured explanations.
+- Supports syllabus-oriented learning.
+- Helps students understand difficult topics.
+
+### 2. Academic Research Agent
+
+- Discovers relevant academic books and references.
+- Provides descriptions and source information.
+- Distinguishes open-access resources from commercial references.
+
+### 3. Video Discovery Agent
+
+- Finds educational videos related to academic topics.
+- Supports syllabus-oriented video discovery.
+- Provides relevant lecture resources.
+
+### 4. Semester Study Planner Agent
+
+- Creates personalised study schedules.
+- Organises preparation into study and revision phases.
+- Includes buffer days and mock-test sessions.
+- Helps students manage their academic preparation.
+
+### 5. Academic Assessment Agent
+
+- Generates multiple-choice questions.
+- Evaluates student answers.
+- Identifies knowledge gaps.
+- Supports diagnostic learning.
+
+---
+
+## ⚙️ How the Orchestrator Works
+
+The Orchestrator, also called the Academic Coordinator, acts as the central management component of the multi-agent system.
+
+Its responsibility is to coordinate academic requests and direct them towards the appropriate workflow.
+
+### Request Processing Pipeline
+
+```text
+              STUDENT REQUEST
+                     |
+                     v
+             REQUEST ANALYSIS
+                     |
+                     v
+                DOMAIN GUARD
+                     |
+                     v
+             INTENT / KEYWORD
+                  ROUTING
+                     |
+          +----------+----------+
+          |          |          |
+          v          v          v
+        TUTOR     RESEARCH    VIDEO
+        AGENT      AGENT      AGENT
+          |
+          +----------+----------+
+                     |
+          +----------+----------+
+          |                     |
+          v                     v
+      STUDY PLANNER         ASSESSMENT
+         AGENT                AGENT
+          |                     |
+          +----------+----------+
+                     |
+                     v
+              RESULT VALIDATION
+                     |
+                     v
+             RESPONSE DELIVERY
+                     |
+                     v
+                  STUDENT
+```
+
+### Orchestration Process
+
+1. **Request Analysis:** Receives and analyses the student's academic request.
+2. **Domain Validation:** Checks whether the request belongs to the educational domain.
+3. **Task Routing:** Uses keyword-based routing logic to identify the appropriate workflow.
+4. **Agent Execution:** Delegates the task to the corresponding specialised agent.
+5. **Result Validation:** Validates and sanitises the generated response.
+6. **Response Delivery:** Returns the result to the student.
+
+The Python coordinator also supports a composite workflow in which the Tutor Agent explains a topic and the Assessment Agent generates practice questions.
+
+---
+
+## 🤖 AI Integration – Google Gemini SDK
+
+EDUAGENT integrates Google's Gemini models through the official Google GenAI SDK.
+
+The SDK provides the communication interface between the application backend and the Gemini model.
+
+The application provides:
+
+- Student queries.
+- System instructions.
+- Academic context.
+- Relevant learning information.
+
+Gemini processes the supplied context and generates language-based responses.
+
+### API Reliability
+
+The backend includes a Gemini API management mechanism that supports:
+
+- Multiple API key configuration.
+- Round-robin key rotation.
+- Failure detection.
+- Automatic failover.
+- Temporary recovery cooldowns.
+- Alternative model attempts.
+
+API key rotation helps handle temporary availability and rate-limit failures. It does not increase the quota allocated to an individual API key.
+
+---
+
+## 📚 Document Processing and Retrieval
+
+The Python implementation includes document-processing and retrieval services.
+
+The general workflow is:
+
+```text
+       PDF DOCUMENT
+             |
+             v
+       TEXT EXTRACTION
+             |
+             v
+       TEXT CHUNKING
+             |
+             v
+       LOCAL STORAGE
+             |
+             v
+       KEYWORD RETRIEVAL
+             |
+             v
+       RELEVANT CONTEXT
+             |
+             v
+       AI RESPONSE
+```
+
+This approach helps identify relevant academic information from uploaded documents.
+
+The current retrieval implementation uses keyword-based matching rather than a vector-embedding database.
+
+---
+
+## 🏗️ Technology Stack
+
+### Frontend
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React
+
+### Backend
+- Node.js
+- Express.js
+- Python
+- Streamlit
+
+### Artificial Intelligence
+- Google Gemini
+- Google GenAI SDK
+- Multi-Agent Architecture
+
+### Data Processing and Storage
+- SQLite
+- PyMuPDF
+- Python
+- Document Retrieval Services
+
+### External Integration
+- YouTube Data API v3
+- Educational resource sources
+
+---
+
+## 📂 Project Structure
+
+```text
+EDUAGENT/
+│
+├── agents/
+│   ├── academic_tutor.py
+│   ├── research_agent.py
+│   ├── video_agent.py
+│   ├── study_planner.py
+│   └── assessment_agent.py
+│
+├── core/
+│   ├── coordinator.py
+│   ├── agent_base.py
+│   ├── domain_guard.py
+│   ├── api_manager.py
+│   └── security.py
+│
+├── services/
+│   ├── document_service.py
+│   ├── retrieval_service.py
+│   ├── study_service.py
+│   ├── syllabus_service.py
+│   └── web_research.py
+│
+├── database/
+│
+├── config/
+│
+├── ui/
+│
+├── src/
+│   └── React frontend files
+│
+├── server.ts
+├── app.py
+├── package.json
+├── requirements.txt
+├── .env.example
+└── README.md
+```
+
+---
+
+## 💻 Installation and Setup
+
+EDUAGENT contains a TypeScript/React application and a separate Python/Streamlit implementation.
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 20+
+- npm
+- Google Gemini API key
+
+### 1. Clone the Repository
+
+```bash
+git clone YOUR_REPOSITORY_URL
+```
+
+```bash
+cd YOUR_REPOSITORY_FOLDER
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+
+GEMINI_API_KEY_1=your_first_api_key
+GEMINI_API_KEY_2=your_second_api_key
+GEMINI_API_KEY_3=your_third_api_key
+
+GEMINI_FLASH_MODEL=gemini-3.1-flash-lite
+
+YOUTUBE_API_KEY=your_youtube_api_key
+
+ADMIN_PASSWORD=your_secure_admin_password
+```
+
+Use your own API credentials. Never upload real API keys, passwords or other secrets to GitHub.
+
+### 3. Run the React + TypeScript Application
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+### 4. Run the Python Application
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the Streamlit application:
+
+```bash
+streamlit run app.py
+```
+
+The Streamlit application will normally be available at:
+
+```text
+http://localhost:8501
+```
+
+---
+
+## 🔐 Security Notes
+
+- Store API credentials in environment variables.
+- Never commit `.env` files.
+- Replace all example credentials with placeholders before publishing.
+- Use strong administrator passwords.
+- Avoid exposing sensitive information in application logs.
+- Rotate any API credentials accidentally committed to a public repository.
+
+---
+
+## 🔭 Future Scope
+
+Potential improvements include:
+
+- Integrating the TypeScript and Python agent implementations into one unified execution pipeline.
+- Implementing semantic search using vector embeddings.
+- Adding advanced student learning analytics.
+- Introducing more sophisticated natural-language intent classification.
+- Supporting additional educational content formats.
+- Improving adaptive learning recommendations.
+- Implementing token-budget-based context optimisation.
+- Supporting multilingual academic assistance.
+
+---
+
+## 🎯 Our Vision
+
+We believe students should spend more time learning and less time managing the process of learning.
+
+EDUAGENT aims to make academic preparation more organised, accessible and personalised through coordinated AI-powered educational assistance.
+
+**EDUAGENT — Learn Smarter. Save Time. Achieve More.**
+
+---
+
+## 👨‍💻 Project Information
+
+**Project:** EDUAGENT – Autonomous Multi-Agent AI Education Platform
+
+**Category:** Agentic AI | Education Technology | Artificial Intelligence
+
+**Core Concept:** Specialised AI Agents + Central Orchestration
+
+**AI Integration:** Google Gemini SDK
+
+**Status:** Development / Prototype
+
+---
+
+*Built to make learning more organised, efficient and accessible.*
